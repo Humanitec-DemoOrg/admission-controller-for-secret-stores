@@ -1,7 +1,7 @@
 # admission-controller-for-secret-stores
 
 ```bash
-kubectl apply -f policy.yaml
+kubectl apply -f secretmappings-policy.yaml
 ```
 
 ```bash
