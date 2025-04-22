@@ -27,7 +27,7 @@ cat << EOF | kubectl apply -f -
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: check-secret-store-access-for-secretmappings
+  name: secretstore-config
   namespace: default
 data:
   allowedSecretStoreNames: "default,valid"
