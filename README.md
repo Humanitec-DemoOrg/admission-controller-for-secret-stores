@@ -1,5 +1,16 @@
 # admission-controller-for-secret-stores
 
+TOC:
+- [Create the policy](#create-the-policy)
+- [Test without Humanitec Deployment](#test-without-humanitec-deployment)
+- [Test with Humanitec Deployment](#test-with-humanitec-deployment)
+- [Thoughts and next steps](#thoughts-and-next-steps)
+
+## Create the policy
+
+We are using [`ValidatingAdmissionPolicy`](https://medium.com/p/ed1321bcf739), built-in in Kubernetes, even if this could be achieved with other admission controllers like Kyverno or OPA Gatekeeper.
+
+Deploy the policy in your cluster:
 ```bash
 kubectl apply -f secretmappings-policy.yaml
 ```
@@ -8,6 +19,8 @@ kubectl apply -f secretmappings-policy.yaml
 kubectl get ValidatingAdmissionPolicy check-secret-store-access-for-secretmappings
 kubectl get ValidatingAdmissionPolicyBinding check-secret-store-access-for-secretmappings
 ```
+
+## Test without Humanitec Deployment
 
 ```bash
 cat << EOF | kubectl apply -f -
@@ -64,6 +77,16 @@ spec:
 EOF
 ```
 
+## Test with Humanitec Deployment
+
+Configure a `base-env` configuring the associated `ConfigMap` as parameter of the policy:
+```bash
+humctl apply -f base-env.yaml
+
+humctl apply -f default-secretstore-config.yaml
+```
+_Note: at this stage, we just create one global/default `config` with the `SecretStore` names allowed. You can create as many and granular `config` as you want._
+
 Test with Humanitec invalid Shared Values&Secrets:
 ```bash
 APP_ID=FIXME
@@ -94,3 +117,9 @@ humctl create value valid valid \
 Deploy a Workload.
 
 You'll see that your Deployment is successful.
+
+## Thoughts and next steps
+
+
+- This doesn't (yet) support `resources`, it's only focusing on `secretmappings` that can be directly used by Devs via the Shared Values&Secrets, as opposed to the `resources` only configurable by PEs.
+- Instead of having a `ConfigMap` as `param` for the policy, depending on use cases, an idea would be to use the `SecretStore` itself in the `humanitec-operator[-system]` namespace, if it's only one `SecretStore` per namespace.
