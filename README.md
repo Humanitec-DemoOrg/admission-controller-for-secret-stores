@@ -1,3 +1,5 @@
+**Repo now archived, because this is not necessary anymore since the Operator v0.21.0 where you can now create `SecretStore` per Namespace (App/Env), allowing the restriction of access from other Namespaces.**
+
 # admission-controller-for-secret-stores
 
 TOC:
